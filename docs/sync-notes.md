@@ -27,6 +27,9 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 | `hooks_used` 开场句式 | `workflows/4-hook.md` 六类 | `hook_roi` 回验 |
 | `platforms` 分平台档案 | `templates/profile.template.yaml` | `per_platform` 配额、平台适配器 |
 | `platform_fit` 分平台封装 | `templates/topic-card.template.yaml` | 发布时按平台取对应标题与形态 |
+| `tone.forbidden_sentences` | `templates/profile.template.yaml` | A6 审查 gate_1 |
+| `tone._internal_*` | 同上 | A2 剪辑（禁止写入文案） |
+| `surface_rule` | 同上 | 表层标签保护配额 |
 
 ---
 
@@ -73,6 +76,14 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 - `ledger.schema.yaml` → `content_layer.style`、`derived.style_roi`
 
 **待验证**：风格配比的窗口（12）和权重来源是否合理。跑三个月再定。
+
+### ⚠️ 价值观层不参与数据回验
+
+`tone` / `surface_rule` / `forbidden_*` 属于**本人决定**，不因指标差而修改。
+A6 只做合规检查，**不得基于 metrics 建议修改这些字段**。
+
+数据能验证「做什么有效」，验证不了「该怎么做人」。
+把价值观层丢进回验循环，结果是账号越优化越不像本人。
 
 ### ⚠️ `hook_roi` 尚无数据
 `4-hook` 的六类开场句式是设计出来的，没有实测支撑。

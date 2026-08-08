@@ -3,6 +3,18 @@
 #
 # ⚠️ SYNC: 本文件的字段名被 automation/ 层直接引用（配额、指标聚合）。
 #          增删字段前查 docs/sync-notes.md，并同步 automation/spec.automation.yaml。
+#
+# ============ 两层，性质不同，不要混着改 ============
+#
+# 数据层   可被 ledger 验证，随数据修正
+#          pillars / content_lines / targets 权重 / series 表现 / styles
+#
+# 价值观层 数据测不到，由本人决定，**不因数据差就改**
+#          tone / production / identity_exposure / forbidden_topics / surface_rule
+#
+# 数据能验证「做什么有效」，验证不了「该怎么做人」。两层都要，不是替代关系。
+# SYNC: A6 只对价值观层做合规检查，不得基于 metrics 建议修改它们。
+#
 profile_version: "1.0"
 profile_id: <短标识>
 updated: "<YYYY-MM-DD>"
@@ -15,7 +27,7 @@ business:
   price_band: <客单价区间>
   buy_frequency: <一次性 | 可复购>
 
-targets:                          # 变现目标，按 rank 排序
+targets:                          # 变现目标，按 rank 排序 ★ 数据层：权重随表现修正
   <key>:
     label: <名称>
     rank: 1
@@ -25,7 +37,7 @@ targets:                          # 变现目标，按 rank 排序
     handled_by: self | team
     mode: normal | opportunistic
 
-content_lines:                    # 目标数 ≠ 内容线数
+content_lines:                    # 目标数 ≠ 内容线数 ★ 数据层
   <线名>: { serves: [<target key>...], driver: <主 target> }
 
 # ============ 内容定位 ============
@@ -51,7 +63,7 @@ ip:
   露出配额: { max: 3, window: 10, unit: posts }   # 上限，不是下限
 
 # ============ 禁区（最重要）============
-forbidden_topics:                 # 完全不做
+forbidden_topics:                 # 完全不做 ★ 价值观层：本人决定，数据不能推翻
   - <...>
 
 identity_fragments:               # 真实但只做注脚
@@ -62,7 +74,7 @@ identity_fragments:               # 真实但只做注脚
     forbid: [开系列, 进标题, 作为选题主题]
 
 # ============ 内容支柱 ============
-pillars:
+pillars:  # ★ 数据层：随 ledger 表现修正
   <名称>: { tier: A|B|C, line: <内容线>, tag: "<#标签>" | null }
 
 pillar_rules:
@@ -72,7 +84,7 @@ pillar_rules:
   tier_C_in_title: false
 
 # ============ 系列 ============
-series:
+series:  # ★ 数据层：表现决定去留
   <系列名>:
     type: 剧情 | 提升 | 挑战探索 | 容器 | 搜索型
     mechanism: 计数 | 悬念 | 时间 | 搜索
@@ -98,7 +110,7 @@ super_symbol:
 # ============ 风格档案 ★ 多风格必填 ============
 # 风格 = 一组剪辑参数，不是标签。见 workflows/8-styles.md
 # SYNC: style 名被 ledger.content_layer.style 与 style_roi 引用
-styles:
+styles:  # ★ 数据层（剪辑参数）；其中 fixed_elements 属价值观层
   <风格名>:
     when: <什么内容用这个风格>
     script_structure: 讲故事 | 晒过程 | 教知识 | 聊观点 | 尬段子 | 说产品
@@ -184,14 +196,72 @@ production:
   edit_mode: ai_full | human | hybrid     # 决定 6-edit 走哪个分支
   edit_tool: <自己剪用什么软件>
 
-# ============ 语气 ============
+# ============ 语气 ★ 价值观层 ============
+# ⚠️ 本块分两类，agent 必须区分：
+#    _internal_* = 内部原则，仅用于判断，绝不进口播 / 标题 / 文案
+#    examples / correct_form = 可以直接说出口的话
+# SYNC: forbidden_sentences 被 automation A6 的 gate_1 消费
 tone:
-  展示有事做: [<真实例句>]
-  开门不追:                       # 只在 CLOSE，每 3 条 1 次
-    examples: [<真实例句>]
-  表达标准:                       # 权重最高，建立不卑
-    examples: [<真实例句>]
-  forbidden_phrases: [求关注, 欢迎咨询, 全程服务, 私信我]
+  _internal_principle: <一句给自己看的道理，不是台词>
+  _internal_logic: <为什么这么做>
+
+  <语气类型A>:                    # 如：展示自己在做事
+    position: <出现位置>
+    examples: [<用户自己念得出口的原话>]
+
+  <语气类型B>:                    # 如：给出联系入口
+    position: 仅 CLOSE
+    frequency: <每 N 条一次>
+    forbidden_position: [HOOK, SETUP]
+    examples: [<...>]
+
+  表达标准:
+    weight: highest
+    protect_from_auto_cut: true
+    rule: 讲事，不讲原则。标准靠具体判断体现，不靠宣称。
+    forbidden_sentences: [<用户说出来会别扭的句子>]
+    correct_form: [<改成讲具体事的版本>]
+
+  说与不说的分界:
+    可以说: 具体的事、具体的数字、当下的感受
+    不能说: 任何对自己的评价、任何总结性原则
+    检验: 这句话如果是别人说你，是不是在夸你？是 → 你自己不能说。
+
+  forbidden_phrases: [<行业通用的油腻话术>]
+
+# ============ 表层声明 ★ 价值观层 ============
+# 账号表层是什么类别，与变现身份可以不同。
+# SYNC: 表层标签保护配额由 automation 消费
+surface_rule:
+  principle: <账号表层的类别，与变现身份可以不同>
+  why: <为什么表层要是这个>
+  hard_rules: [<可机检的约束>]
+  test: <一句判断题，用于逐条自查>
+
+# ============ 身份露出 ★ 价值观层 ============
+identity_exposure:
+  mode: <本人出现的方式>
+  max_per_window: { max: <n>, window: <n>, unit: posts }
+  forbidden_contexts: [<不出现在哪些场景>]
+  note: 这是上限，不是下限
+
+# ============ 素材复用 ============
+reuse_policy:
+  min_gap_days: <同一素材再次使用的最小间隔>
+  max_reuse_count: <同一素材最多用几次>
+  forbid_reuse_in: [<不允许复用的内容类型>]
+
+# ============ 归档 ============
+archive:
+  keep: [<长期保留什么>]
+  retire_after: <多久之后不再复用>
+  note: <归档不等于删除>
+
+# ============ 本地化内容 ============
+local_content:
+  applies_to: [<哪些内容线适用>]
+  geo_terms: [<允许出现的地名>]
+  note: 只有搜索型内容该带地名，见 references/hot-and-language.md
 
 compliance:
   <领域>: <约束>
