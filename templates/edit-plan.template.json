@@ -10,9 +10,11 @@
   },
 
   "vo": {
-    "_comment": "配音。synthetic=true 时必须落在 6b-autoedit 第一节允许的内容类型内",
-    "synthetic": false,
-    "voice_id": null,
+    "_comment": "配音。mode 必须落在 6b-autoedit 第一节判断表允许的组合内",
+    "mode": "live | cloned_self | generic_tts",
+    "voice": null,
+    "human_recorded_segments": [],
+    "_comment_mixed": "态度类/观点类的关键句自己录，段 id 列在上面 —— 混录是推荐做法",
     "segments": [
       { "id": "vo-01", "text": "", "audio": "<绝对路径>", "duration_sec": 0 }
     ]
