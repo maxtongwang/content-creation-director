@@ -123,6 +123,23 @@ speech（若为口播）: narrative | opinion | standard
 
 ---
 
+## 分支 D · b-roll + 配音 全自动 → 见 `6b-autoedit.md`
+
+`form = b_roll_vo` 且手上有素材库与剪辑软件的 MCP 时，走 `6b-autoedit.md`。
+
+**这是产能最高的形态**——不用出镜、不用打光，素材可复用，配音可合成，
+是全流程里唯一能端到端自动化的链路：
+
+```
+script.yaml → 配音 → find_broll 按段找素材 → edit-plan.json → DaVinci 搭时间线 → 通看 → 渲染
+```
+
+⚠️ 用 AI 合成配音之前**必须先过 `6b-autoedit.md` 第一节的判断表**——
+合成音会同时冲掉 `self_presence` 和「人味儿即可信度」两条既有规则，
+只有搜索型 / 攻略 / 榜单这类内容适用。
+
+---
+
 ## 分支 C · 半自动
 
 用户自己剪主线，AI 做粗剪。产出**两份**：

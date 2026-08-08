@@ -1,5 +1,33 @@
 # 更新日志
 
+## [0.3.0] — 2026-08-08
+
+b-roll + 配音的端到端自动化。
+
+### 新增
+- `workflows/6b-autoedit.md`：产能最高形态的完整流水线——
+  配音 → 按段找 b-roll → edit-plan → 搭时间线 → 字幕 → 通看 → 渲染
+- 素材库（VideoSemantics）接入：`find_broll` 按旁白文本找候选，
+  配合 `find_clips` / `search_clips` / `get_transcript` 三级降级
+- 剪辑软件（DaVinci Resolve）接入：导入 → 建时间线 → 铺配音 →
+  `timeline_create_subtitles_from_audio` 自动字幕 → 渲染
+- TTS 接入：分段生成、固定音色、音色 ID 写进 profile 复用
+- `edit-plan.json` 新增 `vo` 段（含 `synthetic` 标记）、
+  每镜 `clip_id` / `source_path`、`autoedit` 段（时间线名与帧率）
+
+### AI 配音的边界（重要）
+- 合成音与两条既有规则冲突：`self_presence` 与「人味儿即可信度」
+- 明确判断表：搜索型 / 攻略 / 榜单 / 氛围向可用；
+  **人设类、态度类、商业转化类不用**
+- 用了合成音仍须插入本人画面，或显式归为「无人设内容」并受配额约束
+- 新增四条告警：合成音用错内容、无人设内容超配额、音色不一致、帧率不一致
+
+### 已知坑
+- `append_to_timeline` 只给片段 ID 会铺整段素材，
+  in/out 须按**时间线帧率**换算成帧号传 `clip_infos`
+
+---
+
 ## [0.2.0] — 2026-08-08
 
 分平台 + 可读真实数据 + 流程不再僵化。

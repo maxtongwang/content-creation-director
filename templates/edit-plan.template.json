@@ -9,6 +9,15 @@
     "resolution": "4K"
   },
 
+  "vo": {
+    "_comment": "配音。synthetic=true 时必须落在 6b-autoedit 第一节允许的内容类型内",
+    "synthetic": false,
+    "voice_id": null,
+    "segments": [
+      { "id": "vo-01", "text": "", "audio": "<绝对路径>", "duration_sec": 0 }
+    ]
+  },
+
   "method": {
     "driver": "voiceover_semantic",
     "cut_on": "语义段边界，不在句中切",
@@ -29,7 +38,10 @@
       "vo_source": { "asset": "A012", "in": 3.2, "out": 9.8 },
       "shots": [
         {
-          "asset": "B003", "in": 0.0, "out": 2.4,
+          "asset": "B003",
+          "clip_id": "<素材库 ID，find_broll 返回>",
+          "source_path": "<绝对路径，剪辑软件导入用>",
+          "in": 0.0, "out": 2.4,
           "size": "特写", "subject": "detail",
           "type": "B-ROLL", "cut_reason": "信息"
         }
@@ -50,6 +62,14 @@
     "keep_sync_sound": true,
     "a_roll_audio_over_b_roll": true,
     "bgm": null
+  },
+
+  "autoedit": {
+    "_comment": "交给剪辑软件时填。帧号按时间线帧率换算，不是素材帧率",
+    "timeline_name": "<用 plan_id>",
+    "timeline_fps": 30,
+    "subtitles_from_vo": true,
+    "human_review_before_render": true
   },
 
   "warnings": [

@@ -15,6 +15,9 @@
 | ------------ | ------------------------------------ | ------------------------------ |
 | 小红书工具   | 读账号、读笔记数据、搜同赛道、发布   | `1d-scan` `3-topic` `7-review` |
 | YouTube 工具 | 读频道、读视频数据、读字幕、搜同赛道 | `1d-scan` `3-topic` `7-review` |
+| 素材库工具   | 按旁白找 b-roll、语义搜素材、拉转写  | `6b-autoedit`                  |
+| 剪辑软件工具 | 建时间线、铺配音、出字幕、渲染       | `6b-autoedit`                  |
+| TTS 工具     | 合成配音（仅限特定内容类型）         | `6b-autoedit`                  |
 | 都没有       | 全部走人工贴数据                     | 同上，退化模式                 |
 
 **探测不到不是错误，是常态。**直接进人工模式，不要停下来让用户配置。
@@ -72,7 +75,62 @@
 
 ---
 
-## 四、抖音
+## 四、素材库（VideoSemantics）
+
+本地视频素材库的语义检索。**b-roll + 配音链路的核心依赖。**
+
+| 工具 | 本 skill 怎么用 |
+|---|---|
+| `find_broll` | **按旁白文本找 b-roll 候选**，一段口播调一次 → `6b-autoedit` |
+| `find_clips` | 用自然语言描述想要的画面（任何语言） |
+| `search_clips` | 关键词搜字幕 / 画面文字（OCR）/ 描述 |
+| `get_clip` | 单个片段完整记录（含转写与词级时间） |
+| `get_transcript` | 片段转写，带分段与词时间 → 对齐剪辑点 |
+| `library_status` | 索引量与存储位置，**开工前先看一眼库是不是空的** |
+| `list_people` `person_clips` `name_person` | 按人物找素材 |
+| `record_correction` `learn_from_edited_captions` | 纠错回流，库会越用越准 |
+
+**注意**：`find_broll` 给的是候选，不是决定。
+语义相关 ≠ 剪辑正确——景别重复、切镜无理由这些它不管，
+仍要按 `workflows/6-edit.md` 的选镜规则筛一遍。
+
+---
+
+## 五、剪辑（DaVinci Resolve）
+
+搭时间线、铺配音、出字幕、渲染。工具很多，b-roll + 配音链路只用到这几个：
+
+| 工具 | 用途 |
+|---|---|
+| `add_items_to_media_pool_from_storage` | 导入素材与配音（**要绝对路径**） |
+| `create_timeline` / `create_timeline_from_clips` | 建时间线 |
+| `append_to_timeline` | 逐镜追加；**in/out 通过 `clip_infos` 传帧号** |
+| `insert_audio_to_current_track` | 铺配音轨 |
+| `timeline_create_subtitles_from_audio` | **从配音自动生成字幕**，省一大截 |
+| `add_render_job` + 渲染类 | 出片，**人工通看之后才调** |
+
+**坑**：`append_to_timeline` 只给片段 ID 会把整段素材原样铺上。
+edit-plan 里的 `in`/`out` 秒数要按**时间线帧率**换算成帧号，混帧率素材尤其容易错。
+
+---
+
+## 六、AI 配音（TTS）
+
+有 TTS 工具时可以合成配音（如 Artlist 的 `generate_voiceover`、`list_voices`）。
+
+| 规则 | 说明 |
+|---|---|
+| 分段生成 | 按 `vo_segment` 逐段，不要整篇一次生成——分段天然对齐剪辑段 |
+| 固定音色 | 同一账号固定一个，换音色等于换人设；ID 写进 profile 复用 |
+| 只用于特定内容 | 搜索型 / 攻略 / 榜单可以；**人设类、态度类、转化类不要** |
+| 标记 | `edit-plan.vo.synthetic: true`，方便复盘时区分 |
+
+**为什么有限制**：本 skill 有一条既有规则是「保留口误、停顿——人味儿即可信度」。
+合成音把这个来源整个去掉了。判断表见 `workflows/6b-autoedit.md` 第一节。
+
+---
+
+## 七、抖音
 
 **目前没有可用的 MCP。**不要假装有。
 
@@ -81,7 +139,7 @@
 
 ---
 
-## 五、退化规则
+## 八、退化规则
 
 | 场景               | 做法                                       |
 | ------------------ | ------------------------------------------ |
@@ -94,7 +152,7 @@
 
 ---
 
-## 六、能自动读的，就不要问
+## 九、能自动读的，就不要问
 
 这是 MCP 接入的全部意义：
 

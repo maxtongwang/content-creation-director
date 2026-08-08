@@ -111,6 +111,7 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 | --------------------------- | ------------- | ---------------------------------- |
 | 脚本怎么写 / 怎么拍 / 分镜  | `5-script.md` | `script.yaml`                      |
 | 怎么剪（自己剪 或 交给 AI） | `6-edit.md`   | `edit-plan.json` / `edit-sheet.md` |
+| b-roll + 配音，想全自动     | `6b-autoedit.md` | `edit-plan.json` + 搭好的时间线 |
 
 ### 反馈与成长
 

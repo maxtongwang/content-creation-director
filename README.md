@@ -2,7 +2,7 @@
 
 **中文自媒体编导工作流** —— 一个可安装的 Claude Skill。
 
-把「做自媒体」拆成 14 个可执行环节，每个环节产出**结构化文件**，
+把「做自媒体」拆成 15 个可执行环节，每个环节产出**结构化文件**，
 文件在环节之间传递，末端可直接驱动自动剪辑。
 
 装上之后，Claude 就能陪你从零把一个账号做起来并持续运营：
@@ -16,7 +16,7 @@
 ## In English
 
 A Claude Skill for planning and running a Chinese social-media account
-(Xiaohongshu / Douyin / YouTube). It breaks account operation into 14 stages and makes
+(Xiaohongshu / Douyin / YouTube). It breaks account operation into 15 stages and makes
 each stage emit a **structured file** that the next stage consumes as input —
 positioning, topic selection, hooks, scripts, shot lists, edit plans,
 performance review.
@@ -98,6 +98,9 @@ git clone https://github.com/maxtongwang/content-creation-director.git \
 |---|---|
 | [xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp) | 读自己主页、读笔记互动数据、读评论区、搜同赛道、发布图文/视频 |
 | [youtube-mcp-server](https://github.com/ZubeidHendricks/youtube-mcp-server) | 读频道与视频数据、**拉字幕反推语言习惯**、搜同赛道、找对标账号 |
+| [VideoSemantics](https://github.com/maxtongwang/VideoSemantics) | 按旁白语义找 b-roll、搜素材库、拉转写 |
+| DaVinci Resolve MCP | 建时间线、铺配音、自动生成字幕、渲染 |
+| TTS（如 Artlist） | 合成配音——**仅限搜索型/攻略/榜单类内容** |
 | 抖音 | 目前没有可用的 MCP，走人工贴数据 |
 
 ### 装了之后的差别
@@ -120,6 +123,41 @@ git clone https://github.com/maxtongwang/content-creation-director.git \
 | 探测不到 | 直接转人工，不会卡住流程 |
 
 工具清单与各环节怎么用：[`references/mcp-tools.md`](references/mcp-tools.md)
+
+---
+
+## b-roll + 配音：产能最高的一条路
+
+不用出镜、不用打光、不用背稿，素材可复用——这是全流程里**唯一能端到端自动化**的形态。
+
+```
+script.yaml  →  配音  →  按段找 b-roll  →  edit-plan.json  →  DaVinci 搭时间线  →  通看  →  渲染
+             真人/AI    find_broll         本 skill 产出       自动建轨+字幕      人工
+```
+
+| 环节 | 靠什么 | 没有工具时 |
+|---|---|---|
+| 找 b-roll | `find_broll(旁白文本)` 按段返回候选 | 自己挑素材 |
+| 搭时间线 | DaVinci MCP 导入 → 排轨 → 铺配音 | 输出 `edit-sheet.md` 自己剪 |
+| 字幕 | 从配音轨自动生成 | 手打 |
+| 配音 | 真人录 或 TTS 合成 | 真人录（本来就是默认） |
+
+**缺一环就退化一环，不会卡住。**
+
+### AI 配音有边界，不是哪都能用
+
+这条链路最容易被滥用的地方。合成配音会同时冲掉本 skill 的两条既有规则：
+`self_presence`（b-roll 型要求本人入画 ≥15%）和「保留口误停顿——人味儿即可信度」。
+
+| 内容类型 | AI 配音 |
+|---|---|
+| 搜索型 / 攻略 / 教程 / 榜单 / 氛围向 | 可以 |
+| 人设类 / 观点类 / 态度类 / 商业转化类 | **不要** |
+
+**默认真人录音。**用了合成音要在 `edit-plan.vo.synthetic` 标记，
+并且仍要插入本人画面（无声也算）——否则账号会变成一个没有人的资讯号。
+
+细节见 [`workflows/6b-autoedit.md`](workflows/6b-autoedit.md)。
 
 ---
 
@@ -239,6 +277,7 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 | 4   | 标题·封面·开头     | `topic-card` 的 hook 段            |
 | 5   | 脚本与分镜         | `script.yaml`                      |
 | 6   | 剪辑交付           | `edit-plan.json` / `edit-sheet.md` |
+| 6b  | b-roll+配音 全自动 | `edit-plan.json` + 搭好的时间线    |
 | 7   | 复盘诊断           | 诊断 + 回流指令                    |
 | 8   | 风格档案           | `profile.yaml` 的 styles 段        |
 | 9   | 统一交付验收       | 所有分支的唯一出口                 |
@@ -310,7 +349,7 @@ automation（发布层）  分发 → 记账 → 配额 → 排期     规则，
 
 ```
 SKILL.md              统一入口与路由
-workflows/            14 个环节（创作层）
+workflows/            15 个环节（创作层）
 references/           方法论 + 平台手册 + MCP 工具清单（运行时读取）
 templates/            5 个结构化模板
 automation/           发布与记账层（配额 · ledger · agents）
