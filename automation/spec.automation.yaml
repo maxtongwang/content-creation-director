@@ -1,10 +1,10 @@
 # spec.automation.yaml —— 发布与记账规则
 #
 # ⚠️ SYNC: 本文件的字段名必须与 templates/profile.template.yaml 一致。
-#          director 工作流更新时先查 docs/sync-notes.md。
+#          创作层工作流更新时先查 docs/sync-notes.md。
 spec_version: "0.1.0"
 layer: automation
-requires: profile.yaml            # 由 director/workflows/1-account 产出
+requires: profile.yaml            # 由 workflows/1-account 产出
 
 # ============ 发布策略 ============
 publish_policy:
@@ -56,7 +56,7 @@ quotas:
 
 # ============ 平台 ============
 platforms:
-  # SYNC: 平台约束会影响 director/workflows/4-hook 的标题长度校验
+  # SYNC: 平台约束会影响 workflows/4-hook 的标题长度校验
   <平台名>:
     title_max_chars: <n>
     body_max_chars: <n>
@@ -81,7 +81,7 @@ bootstrap:
   allowed_uses:
     - 反查素材是否已用
     - 时间回访类系列的线索
-    - 供 director/workflows/1c-backfill 反推 profile
+    - 供 workflows/1c-backfill 反推 profile
   forbidden_uses:
     - 参与配额计算        # 旧内容是旧策略产物，会把 agent 拉回老路
   quota_epoch: 新策略生效日
@@ -99,7 +99,7 @@ human_in_the_loop:
     - 态度类口播的语气匹配
     - 选题最终挑选（agent 给候选，人选一个）
     - 「表达标准」类内容的保留判断
-    # SYNC: 上述四项与 director/workflows/9-deliver.md 的人工项保持一致
+    # SYNC: 上述四项与 workflows/9-deliver.md 的人工项保持一致
   fully_automated:
     - 发布数量
     - 发布时间与间隔

@@ -1,18 +1,18 @@
 # 自动化 Agent
 
-**⚠️ SYNC**：本文所有 agent 的判断逻辑都来自 `director/workflows/`。
-director 的环节更新时，对应 agent 的行为也要跟着改。改动前查 [`../docs/sync-notes.md`](../docs/sync-notes.md)。
+**⚠️ SYNC**：本文所有 agent 的判断逻辑都来自 `workflows/`。
+创作层的环节更新时，对应 agent 的行为也要跟着改。改动前查 [`../docs/sync-notes.md`](../docs/sync-notes.md)。
 
 ---
 
 ## 分层
 
 ```
-director（人 + Claude 协作，产出创作决策）
+创作层（人 + Claude 协作，产出创作决策）
     ↓ profile / topic-card / script / edit-plan
 automation（agent 执行，处理连续性事务）
     ↓ ledger
-回流到 director/workflows/7-review
+回流到 workflows/7-review
 ```
 
 **原则：创作靠判断，发布靠规则。**判断不能自动化，规则可以。
@@ -39,7 +39,7 @@ automation（agent 执行，处理连续性事务）
 ## A1 · 选题 Agent（每日）
 
 **读**：ledger（配额缺口）、素材库、外部信号、profile
-**依据**：`director/workflows/3-topic.md` 的完整逻辑
+**依据**：`workflows/3-topic.md` 的完整逻辑
 **产出**：3 个选题候选（不是 1 个）
 
 ```
@@ -60,7 +60,7 @@ automation（agent 执行，处理连续性事务）
 ## A2 · 剪辑 Agent（每次拍摄后）
 
 **读**：素材、转写、script.yaml、profile.styles
-**依据**：`director/workflows/6-edit.md` + `8-styles.md`
+**依据**：`workflows/6-edit.md` + `8-styles.md`
 
 ```
 执行顺序：识别风格 → 素材打标 → 口播驱动分段 → 按脚本选镜 → 出片
@@ -116,7 +116,7 @@ automation（agent 执行，处理连续性事务）
 
 ## A6 · 审查 Agent
 
-**依据**：`director/workflows/9-deliver.md`（三条硬标准）+ `3-topic.md`（定位闸门）
+**依据**：`workflows/9-deliver.md`（三条硬标准）+ `3-topic.md`（定位闸门）
 
 ```
 gate_1 定位合规  硬闸门，有否决权，无改写权

@@ -1,6 +1,6 @@
 # 同步清单
 
-`director`（创作层）和 `automation`（发布层）共用同一套字段名。
+创作层（`workflows/`）和 `automation`（发布层）共用同一套字段名。
 **改一边就要检查另一边。**
 
 改动前先跑：
@@ -13,7 +13,7 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 
 ## 一、字段对照表
 
-| 概念 | director 定义在 | automation 消费在 |
+| 概念 | 创作层定义在 | automation 消费在 |
 |---|---|---|
 | `pillars` 内容支柱 | `templates/profile.template.yaml` | 配额、`pillar_roi` |
 | `styles` 风格档案 | 同上 + `workflows/8-styles.md` | 剪辑参数、`style_roi`、风格配比 |
@@ -28,7 +28,7 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 
 ---
 
-## 二、改 director 时要检查 automation
+## 二、改创作层时要检查 automation
 
 | 改了什么 | 要同步 |
 |---|---|
@@ -42,7 +42,7 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 
 ---
 
-## 三、改 automation 时要检查 director
+## 三、改 automation 时要检查创作层
 
 | 改了什么 | 要同步 |
 |---|---|
@@ -61,7 +61,7 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 ### ⚠️ `templates/ledger.template.yaml` 是精简版
 完整版在 `automation/ledger.schema.yaml`。
 两者字段必须一致——目前 template 缺 `semantic_index` 的部分字段、缺 `reuse_policy`。
-**决定**：template 保持精简（director 只需要读，不需要写全量），
+**决定**：template 保持精简（创作层只需要读，不需要写全量），
 但**字段名不得冲突**。加字段先加到 schema，再决定要不要进 template。
 
 ### ⚠️ `style` 是 v0.1 新增维度
@@ -84,6 +84,6 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 
 ## 五、版本约定
 
-- `director` 改结构 → 升 minor（0.1 → 0.2）
+- 创作层改结构 → 升 minor（0.1 → 0.2）
 - `automation` 单独改数值 → 升 patch
 - 两层字段不一致 → **不允许发版**，先补同步

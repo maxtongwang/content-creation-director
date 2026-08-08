@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="${ROOT}/dist"
-NAME="director"
+NAME="content-creation-director"
 
 rm -rf "${OUT}" && mkdir -p "${OUT}/${NAME}"
 

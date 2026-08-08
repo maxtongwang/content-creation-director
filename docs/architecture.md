@@ -7,7 +7,7 @@
 
 ```mermaid
 flowchart TB
-    U([用户的内容需求]) --> M["**director**<br/>统一入口<br/>理解需求 · 选择路径 · 整合验收"]
+    U([用户的内容需求]) --> M["**content-creation-director**<br/>统一入口<br/>理解需求 · 选择路径 · 整合验收"]
 
     M -- 信息不足 --> I["0-intake<br/>需求澄清<br/>最多 3 个问题"]
     I --> M
