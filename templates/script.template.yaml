@@ -1,0 +1,64 @@
+# script.yaml —— 脚本与分镜（信息密度最高，直接决定剪辑质量）
+# 由 workflows/5-script.md 产出
+script_id: <script-YYYY-MM-DD-nn>
+topic_ref: <topic_id>
+
+structure:
+  main: 讲故事 | 晒过程 | 教知识 | 聊观点 | 尬段子 | 说产品
+  sub: <至多一种为辅> | null
+
+style: <风格名>                    # 取 profile.styles 里的一个
+form: 出镜 | b_roll_vo | 图文      # 由 style 决定，此处冗余记录便于校验
+
+# ============ 口播骨架（不是逐字稿）============
+voiceover:
+  - id: vo-01
+    role: HOOK
+    guide: <引导问题，不是台词>
+    intent: <这段要让观众感觉到什么>
+    speech_type: narrative | opinion | standard
+  - id: vo-02
+    role: SETUP
+    guide: <...>
+  - id: vo-03
+    role: BODY-1
+    guide: <...>
+  - id: vo-99
+    role: CLOSE
+    guide: <...>
+    has_invite: false              # 邀请只能在这里，且每 3 条 1 次
+
+# ============ 镜头表 ============
+shots:
+  - shot_id: S01
+    role: HOOK
+    vo_segment: vo-01
+    type: A-ROLL | B-ROLL
+    size: 远景 | 全景 | 中景 | 近景 | 特写
+    subject: self | 物 | 环境 | 他人
+    motion: 固定 | 手持 | 运动
+    cut_reason: 信息 | 情绪 | 视角     # 没有理由就不该有这个镜头
+    audio: 同期声 | 环境音 | 静音
+    note: <要拍到什么>
+
+# ============ b-roll 型专用约束 ============
+self_presence:                     # form=b_roll_vo 时必填
+  max_gap_seconds: 90
+  must_appear_in: [HOOK 或 CLOSE 至少其一]
+  min_ratio: 0.15
+  personal_detail: <只有本人能说的那处具体经验>
+
+# ============ 拍摄清单 ============
+shoot_list:
+  locations: [<地点>]
+  must_have: [<不拍就补不回来的>]
+  optional: [<有余力再拍>]
+  props: [<profile 里的道具带了吗>]
+  cautions: [<隐私打码 / 授权 / 光线>]
+
+checks:
+  结构只有一主一辅: true
+  每个镜头都有cut_reason: true
+  HOOK无身份自报: true
+  HOOK无邀请: true
+  拍摄清单今天可执行: true

@@ -1,0 +1,65 @@
+{
+  "_comment": "edit-plan.json —— 自动剪辑指令。由 workflows/6-edit.md 产出，可被 AI 相册 / DaVinci / MCP 直接执行",
+  "plan_id": "edit-YYYY-MM-DD-nn",
+  "script_ref": "script-YYYY-MM-DD-nn",
+
+  "output": {
+    "aspect_ratio": "4:3",
+    "crop": "none",
+    "resolution": "4K"
+  },
+
+  "method": {
+    "driver": "voiceover_semantic",
+    "cut_on": "语义段边界，不在句中切",
+    "keep_disfluency": true,
+    "cut_silence_over_sec": 3,
+    "forbid": [
+      "为凑时长重复 b-roll",
+      "为缩短时长砍掉完整语义段",
+      "按拍摄顺序排列"
+    ]
+  },
+
+  "timeline": [
+    {
+      "seq": 1,
+      "role": "HOOK",
+      "vo_segment": "vo-01",
+      "vo_source": { "asset": "A012", "in": 3.2, "out": 9.8 },
+      "shots": [
+        {
+          "asset": "B003", "in": 0.0, "out": 2.4,
+          "size": "特写", "subject": "detail",
+          "type": "B-ROLL", "cut_reason": "信息"
+        }
+      ]
+    }
+  ],
+
+  "title_layer": {
+    "text": "",
+    "position": "上方留白带",
+    "start_sec": 0,
+    "duration_sec": 4,
+    "max_chars": 12,
+    "burn_in": false
+  },
+
+  "audio": {
+    "keep_sync_sound": true,
+    "a_roll_audio_over_b_roll": true,
+    "bgm": null
+  },
+
+  "warnings": [
+    { "code": "invalid_cut", "shot": "S07", "msg": "与前一镜 size+subject 相同" }
+  ],
+
+  "human_review_required": [
+    "隐私打码与授权",
+    "态度类口播的语气匹配",
+    "表达标准类内容的保留判断",
+    "最终成片通看"
+  ]
+}

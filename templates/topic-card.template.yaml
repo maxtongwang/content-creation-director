@@ -1,0 +1,76 @@
+# topic-card.yaml —— 选题卡
+# 由 workflows/3-topic.md + 4-hook.md 产出
+topic_id: <YYYY-MM-DD-nn>
+profile_ref: <profile_id>
+created: "<YYYY-MM-DD>"
+
+# ============ 闸门（先过）============
+gate:
+  forbidden_hit: false
+  fragment_violation: false
+  in_featured_pillar: true
+  quota_ok: true
+  compliance_ok: true
+  verdict: pass | reject
+  reject_reason: <撞了哪条>
+
+# ============ 选题 ============
+topic:
+  one_line: <一句话说清这条讲什么>
+  source: 自己有什么 | 看世界（愤怒/忧愁/矛盾） | 热点
+  content_line: <内容线>
+  pillar: <支柱>            # 拍什么
+  style: <风格名>           # 怎么呈现 —— 与支柱是两个维度，可自由组合
+  series: <系列名> | null
+  episode: <n> | null
+
+hot:                              # 若结合热点
+  event: <热点>
+  相关性: pass | fail
+  时效性: pass | fail
+  可说性: pass | fail
+  展现你这个人: <怎么展现>        # 缺这条就是无效跟热点
+
+# ============ 爆款增幅 ============
+viral:
+  elements_hit: [反差的, 人群的]   # 八标签，至少命中 1
+  type: 万古同悲 | 惊世骇俗 | 打破节奏
+  共情层次: 人类 | 性别 | 民族 | 身份 | 职业 | 年龄 | 地域
+
+# ============ 验证（爆款四条件）============
+validation:
+  能看懂: true
+  群体够大: true
+  满足需求: 情绪 | 信息
+  引发互动: <评论/转发/@ 的具体钩子>     # 点赞收藏不算
+  verdict: pass | revise
+
+purpose: 数据型 | 涨粉型 | 商业型 | 调性型 | 表达型
+
+涨粉陷阱检查:
+  是否攻略型: true | false
+  有延续感吗: true | false          # 单次攻略只被收藏不被关注
+
+# ============ Hook ============
+hook:
+  titles:                          # 三种句式各一
+    身份反差: <...>
+    结果悬念: <...>
+    日常切片: <...>
+  title_chosen: <...>
+  title_len_ok: true               # 小红书 ≤20 字
+  cover:
+    取景: <拍什么，不是"拍好看点">
+    文字: <≤10 字>
+    位置: 上方安全区
+  opening:
+    第一句: <可以直接念出来的那句>
+    句式类型: A具体时刻 | B反常 | C抛问题 | D数字 | E半句话 | F场景白描
+    第一画面: <有动作、不静止、非大头照>
+
+# ============ 制作预估 ============
+production:
+  form: 口述 | 视频+配音 | 图片+配音 | 情景剧
+  script_structure: 讲故事 | 晒过程 | 教知识 | 聊观点 | 尬段子 | 说产品
+  est_duration: <由选题决定，不设限>
+  shoot_needed: [<要补拍什么>]

@@ -1,0 +1,66 @@
+# ledger —— 发布履历（配额判断与复盘的前提）
+# 双层：内容层 + 分发层。配额按平台分别计算。
+ledger_version: "1.0"
+
+content_layer:                     # 成片本身，与平台无关
+  - content_id: <c-YYYY-MM-DD-nn>
+    script_ref: <script_id>
+    topic_ref: <topic_id>
+    series: <系列名>
+    episode: <n>
+    content_type: 推荐型 | 搜索型
+    purpose: 数据型 | 涨粉型 | 商业型 | 调性型 | 表达型
+    content_line: <内容线>
+    pillar: <支柱>
+    duration_sec: <n>
+    has_invite: false
+    is_slice: false
+    parent_id: null
+    semantic_index:                # 记录「讲了什么」，支撑复用与去重
+      topics: [<话题/术语>]
+      key_points: [<提出的观点>]
+      hooks_used: [<用过的开场句式>]
+      locations: [<出现的地点>]
+      depth: 提过 | 讲透
+      reusable: true
+
+distribution_layer:                # 内容 × 平台
+  - dist_id: <d-nn>
+    content_id: <c-...>
+    platform: <平台>
+    status: published | skipped | scheduled | failed
+    published_at: "<ISO8601>"
+    title: <该平台的标题>
+    tags: [<...>]
+    record_source: native | backfill | manual
+
+metric_snapshots:                  # 时间序列，不是快照
+  - dist_id: <d-nn>
+    day_offset: D7
+    views: <n>
+    watch_ratio: <n>
+    likes: <n>
+    saves: <n>
+    comments: <n>
+    follows: <n>
+    dms: <n>
+
+polling:
+  推荐型: [D1, D3, D7, D14, D30]
+  搜索型: [D1, D7, D30, D90, D180]   # 长尾只能长周期看出来
+
+derived:
+  tail_ratio: views_D30 / views_D7    # >1.5 说明长尾成立
+  pillar_roi: 按支柱聚合的 涨粉/播放
+  line_roi: 按内容线聚合的 私信数
+
+quotas:                            # 全部比例制，随发布量自动伸缩
+  搜索型内容: { max: 2, window: 10 }
+  生活内容底线: { min: 6, window: 10 }
+  片尾邀请: { count: 1, window: 3 }
+  内容线配比: { window: 18, weights: {} }
+
+rhythm:
+  min_interval_hours: 6
+  max_consecutive_same_series: 2
+  max_consecutive_same_pillar: 2

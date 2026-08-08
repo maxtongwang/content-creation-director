@@ -1,0 +1,142 @@
+# profile.yaml —— 账号定位（全流程地基）
+# 由 workflows/1-account.md + 2-ip.md 产出
+profile_version: "1.0"
+profile_id: <短标识>
+updated: "<YYYY-MM-DD>"
+
+# ============ 商业定位（第一位）============
+business:
+  has_product: true | false
+  model: 电商 | 咨询 | 广告
+  sells: <卖什么给谁>
+  price_band: <客单价区间>
+  buy_frequency: <一次性 | 可复购>
+
+targets:                          # 变现目标，按 rank 排序
+  <key>:
+    label: <名称>
+    rank: 1
+    weight: <配比权重>
+    fears: <他最怕什么>
+    proof_needed: <他需要什么证明>
+    handled_by: self | team
+    mode: normal | opportunistic
+
+content_lines:                    # 目标数 ≠ 内容线数
+  <线名>: { serves: [<target key>...], driver: <主 target> }
+
+# ============ 内容定位 ============
+content_position: 主题IP | 人物IP
+
+# ============ IP 策划（五要素）============
+ip:
+  身份: <你是谁，凭什么讲>
+  场景: <内容发生在哪>
+  道具: <反复出现的物件>     # 别留空
+  态度: <立场，会拒绝什么>
+  呈现: 出镜 | 口播 | b_roll_vo | 图文
+
+  真实部分: [<性格>, <作风>, <习惯>, <口头禅>]
+  设计部分: [<围绕真实的放大>]
+  缺点: <无伤大雅、能引发共情的那个>
+
+  验证:
+    颠覆检查: pass | fail    # 观众发现你不是这样会怎样
+    可持续检查: pass | fail  # 能演三年吗
+    缺点检查: pass | fail
+
+  露出配额: { max: 3, window: 10, unit: posts }   # 上限，不是下限
+
+# ============ 禁区（最重要）============
+forbidden_topics:                 # 完全不做
+  - <...>
+
+identity_fragments:               # 真实但只做注脚
+  <名称>:
+    note: <说明>
+    usage: tag_only | mention_only
+    max_per_month: <n>
+    forbid: [开系列, 进标题, 作为选题主题]
+
+# ============ 内容支柱 ============
+pillars:
+  <名称>: { tier: A|B|C, line: <内容线>, tag: "<#标签>" | null }
+
+pillar_rules:
+  monthly_featured: 2
+  composition: "1 个 A + 1 个 B；每条内容线各覆盖一个"
+  rotate_every: quarter
+  tier_C_in_title: false
+
+# ============ 系列 ============
+series:
+  <系列名>:
+    type: 剧情 | 提升 | 挑战探索 | 容器 | 搜索型
+    mechanism: 计数 | 悬念 | 时间 | 搜索
+    cost: lowest | low | medium | high
+    target: <target key> | both
+    naming_check: { 锁结果: false, 锁时长: false, 锁场景: false, 锁频率: false }
+    requires_human: [<需人工把关的环节>]
+
+# ============ 账户搭建 ============
+account:
+  昵称: <有记忆点 + 有信息量>
+  简介: |
+    <实际简介全文>
+  头像: <描述>
+  头图: <描述>
+  forbid: [欢迎咨询, 全程服务, 求关注]
+
+super_symbol:
+  MI理念: <反复讲的那句话>
+  BI行为: <反复做的那个动作>
+  VI视觉: <反复出现的那个样子>
+
+# ============ 风格档案 ★ 多风格必填 ============
+# 风格 = 一组剪辑参数，不是标签。见 workflows/8-styles.md
+styles:
+  <风格名>:
+    when: <什么内容用这个风格>
+    script_structure: 讲故事 | 晒过程 | 教知识 | 聊观点 | 尬段子 | 说产品
+    form: 出镜 | b_roll_vo | 图文 | 情景剧
+    edit:
+      pace: 慢 | 中 | 快
+      avg_shot_sec: [<下限>, <上限>]
+      cut_density: <每分钟切镜数>
+      transition: 硬切 | 匹配剪 | 叠化
+      bgm: none | 低 | 中 | 高
+      subtitle: 无 | 基础 | 花字
+      vo_handling: 全保留 | 删长静默 | 紧凑
+      speed_ramp: false | true
+      color: 原生 | 统一调色
+    identity:
+      self_presence_required: true | false
+      max_gap_seconds: 90
+      min_ratio: 0.15
+    reference: <一条自己认可的成片，作为对齐基准>   # 最重要的一行
+
+# ============ 制作限制 ============
+production:
+  platforms: [<平台>]
+  aspect_ratio: <画幅>
+  crop: none | per_platform
+  can_show_face: true | false
+  weekly_capacity: <条>
+  equipment: [<设备>]
+  edit_mode: ai_full | human | hybrid     # 决定 6-edit 走哪个分支
+  edit_tool: <自己剪用什么软件>
+
+# ============ 语气 ============
+tone:
+  展示有事做: [<真实例句>]
+  开门不追:                       # 只在 CLOSE，每 3 条 1 次
+    examples: [<真实例句>]
+  表达标准:                       # 权重最高，建立不卑
+    examples: [<真实例句>]
+  forbidden_phrases: [求关注, 欢迎咨询, 全程服务, 私信我]
+
+compliance:
+  <领域>: <约束>
+
+scene_vocabulary: [<供素材打标的场景词表>]
+fixed_tags: [<每条必带>]
