@@ -20,6 +20,19 @@ jobs:
       - name: Build bundle
         run: bash scripts/build.sh
 
+      - name: Resolve tag
+        id: t
+        run: |
+          # On a tag push GITHUB_REF_NAME is the tag; on workflow_dispatch it is
+          # the BRANCH, which would publish a release literally called "main".
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            tag="v$(cat VERSION)"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "resolved tag: $tag"
+
       - name: Check VERSION matches the tag
         run: |
           tag="${GITHUB_REF_NAME#v}"
@@ -34,7 +47,7 @@ jobs:
       - name: Extract this version's changelog
         id: notes
         run: |
-          tag="${GITHUB_REF_NAME:-v$(cat VERSION)}"
+          tag="${{ steps.t.outputs.tag }}"
           # 取 CHANGELOG 里本版本那一段，作为 release 说明
           awk -v v="${tag#v}" '
             $0 ~ "^## \\[" v "\\]" {on=1; next}
@@ -47,7 +60,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="${GITHUB_REF_NAME:-v$(cat VERSION)}"
+          tag="${{ steps.t.outputs.tag }}"
           gh release create "$tag" \
             dist/content-creation-director.skill \
             --title "$tag" \
