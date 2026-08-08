@@ -78,10 +78,6 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 `4-hook` 的六类开场句式是设计出来的，没有实测支撑。
 `ledger.derived.hook_roi` 就是为了验证它们——**跑够样本前不要当结论用**。
 
-### ⚠️ `archive/viral-rules.yaml` 的定位
-那是早期的规律库骨架，`conflict_level` 分级机制现已由
-`agents.md` 的 A6 三道 gate 取代。**保留作为溯源，不再维护。**
-
 ---
 
 ## 五、版本约定
