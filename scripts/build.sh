@@ -11,6 +11,7 @@ rm -rf "${OUT}" && mkdir -p "${OUT}/${NAME}"
 cp "${ROOT}/SKILL.md" "${OUT}/${NAME}/"
 cp -r "${ROOT}/workflows" "${ROOT}/references" "${ROOT}/templates" "${OUT}/${NAME}/"
 cp "${ROOT}/README.md" "${OUT}/${NAME}/" 2>/dev/null || true
+# 注意：archive/ 不打包 —— 那是研究笔记，不是产品的一部分
 
 cd "${OUT}"
 zip -qr "${NAME}.skill" "${NAME}"

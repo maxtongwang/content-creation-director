@@ -11,8 +11,7 @@ edit-sheet*.md
 ledger*.yaml
 !templates/ledger.template.yaml
 
-# 第三方方法论存档 —— 仅本地，不公开
-archive/
+# 私有笔记
 *.private.md
 
 # 构建产物

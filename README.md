@@ -99,6 +99,21 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 
 ---
 
+## 目录
+
+```
+SKILL.md              统一入口与路由
+workflows/            12 个环节
+references/           方法论（skill 运行时读取，已改写为通用表述）
+templates/            5 个结构化模板
+archive/              研究存档（学习笔记，不打包进 skill）
+docs/architecture.md  架构图
+scripts/build.sh      一键打包
+```
+
+> `archive/` 保留了原作者署名，**建议仓库保持 Private**。
+> 详见 [`archive/README.md`](archive/README.md)。
+
 ## 许可
 
-MIT
+MIT（不含 `archive/` —— 该目录为第三方内容的学习笔记，权益归原作者）
