@@ -125,6 +125,30 @@ git clone https://github.com/maxtongwang/content-creation-director.git \
 
 ---
 
+### 更新
+
+**用 git 装的**（Claude Code / Codex）——一条命令，顺带告诉你变了什么：
+
+```bash
+cd ~/.claude/skills/content-creation-director && bash scripts/update.sh
+```
+
+它会拉取、打印本次的 CHANGELOG 变更、重新打包 `.skill`。
+本地有未提交改动时会**停下来**而不是覆盖你。
+
+只想拉不想看变更，`git pull` 也一样生效。
+
+**用 .skill 装的**（桌面版 / 网页 / 手机）——不用 clone，直接下载：
+
+[**最新版 .skill 下载**](https://github.com/maxtongwang/content-creation-director/releases/latest)
+
+然后 Settings → Capabilities → Skills 重新上传。**传一次，三端同步。**
+
+**怎么知道自己是哪一版**：装好的 skill 目录里有 `VERSION` 和 `CHANGELOG.md`，
+问一句「你现在是哪个版本」也行。
+
+---
+
 ### 装好了怎么确认
 
 | 检查 | 预期 |

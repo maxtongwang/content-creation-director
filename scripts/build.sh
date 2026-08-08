@@ -15,10 +15,13 @@ cp -r "${ROOT}/automation" "${OUT}/${NAME}/"
 mkdir -p "${OUT}/${NAME}/docs"
 cp "${ROOT}/docs/sync-notes.md" "${OUT}/${NAME}/docs/"
 cp "${ROOT}/README.md" "${OUT}/${NAME}/" 2>/dev/null || true
+# 版本随包走：装完之后用户能看出自己手上是哪一版，
+# 否则「要不要更新」这个问题没法自己回答。
+cp "${ROOT}/VERSION" "${ROOT}/CHANGELOG.md" "${OUT}/${NAME}/" 2>/dev/null || true
 # docs/architecture.md 不打包 —— 仓库文档，不是运行时依赖
 
 cd "${OUT}"
 zip -qr "${NAME}.skill" "${NAME}"
 rm -rf "${NAME}"
 
-echo "✅ 已生成 ${OUT}/${NAME}.skill"
+echo "✅ 已生成 ${OUT}/${NAME}.skill  (v$(cat "${ROOT}/VERSION" 2>/dev/null || echo "?"))"

@@ -1,0 +1,55 @@
+name: Release skill bundle
+
+# 打 tag 就出一个可直接下载的 .skill。
+# 没有这个流程，桌面版用户想升级就得先 clone 再 build —— 为了一个 100KB 的
+# zip 装一套 git 工具链，多数人会干脆不升级。
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build bundle
+        run: bash scripts/build.sh
+
+      - name: Check VERSION matches the tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          file="$(cat VERSION)"
+          if [ "$tag" != "$file" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match VERSION ($file)."
+            echo "Bump VERSION in the same commit as the tag."
+            exit 1
+          fi
+        if: startsWith(github.ref, 'refs/tags/v')
+
+      - name: Extract this version's changelog
+        id: notes
+        run: |
+          tag="${GITHUB_REF_NAME:-v$(cat VERSION)}"
+          # 取 CHANGELOG 里本版本那一段，作为 release 说明
+          awk -v v="${tag#v}" '
+            $0 ~ "^## \\[" v "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "See CHANGELOG.md" > notes.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME:-v$(cat VERSION)}"
+          gh release create "$tag" \
+            dist/content-creation-director.skill \
+            --title "$tag" \
+            --notes-file notes.md \
+            || gh release upload "$tag" dist/content-creation-director.skill --clobber
