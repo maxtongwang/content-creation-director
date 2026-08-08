@@ -127,7 +127,7 @@ AI 不是在猜怎么剪，是在执行已经写好的表。
 
 ```
 SKILL.md              统一入口与路由
-workflows/            12 个环节
+workflows/            13 个环节
   0-intake.md         需求澄清
   1-account.md        账号定位
   1b-discover.md      素材挖掘（零基础）
