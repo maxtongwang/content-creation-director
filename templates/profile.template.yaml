@@ -1,5 +1,8 @@
 # profile.yaml —— 账号定位（全流程地基）
 # 由 workflows/1-account.md + 2-ip.md 产出
+#
+# ⚠️ SYNC: 本文件的字段名被 automation/ 层直接引用（配额、指标聚合）。
+#          增删字段前查 docs/sync-notes.md，并同步 automation/spec.automation.yaml。
 profile_version: "1.0"
 profile_id: <短标识>
 updated: "<YYYY-MM-DD>"
@@ -94,6 +97,7 @@ super_symbol:
 
 # ============ 风格档案 ★ 多风格必填 ============
 # 风格 = 一组剪辑参数，不是标签。见 workflows/8-styles.md
+# SYNC: style 名被 ledger.content_layer.style 与 style_roi 引用
 styles:
   <风格名>:
     when: <什么内容用这个风格>

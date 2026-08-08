@@ -1,0 +1,110 @@
+# spec.automation.yaml —— 发布与记账规则
+#
+# ⚠️ SYNC: 本文件的字段名必须与 templates/profile.template.yaml 一致。
+#          director 工作流更新时先查 docs/sync-notes.md。
+spec_version: "0.1.0"
+layer: automation
+requires: profile.yaml            # 由 director/workflows/1-account 产出
+
+# ============ 发布策略 ============
+publish_policy:
+  volume: unlimited
+  principle: >
+    产能上不封顶。Agent 控制的是「类型配比」和「节奏」，不是「数量」。
+    所有配额均为比例制，随发布量自动伸缩。
+
+  rhythm:
+    min_interval_hours: 6
+    max_consecutive_same_series: 2
+    max_consecutive_same_pillar: 2      # SYNC: pillar 对应 profile.pillars
+    max_consecutive_same_style: 2       # SYNC: style 对应 profile.styles（v0.1 新增）
+    max_consecutive_professional: 2
+    slice_vs_source_gap_days: 3
+
+  queue:
+    mode: buffer
+    target_buffer_days: 7
+    min_buffer_days: 3
+    selection: 按当前配额缺口挑下一条，而非按拍摄顺序
+
+  fallback:                        # 队列见底的兜底顺序
+    rule: 按 cost 升序取 profile.series（批量库存 → 当天可产 → 调用归档素材）
+
+# ============ 配额（全部比例制）============
+# SYNC: 这些配额的判断依据来自 profile。改 profile 结构时同步检查。
+quotas:
+  搜索型内容:   { max: 2,  window: 10, unit: posts }
+  低成本内容:   { min: 1,  window: 8,  unit: posts }
+  片尾邀请:     { count: 1, window: 3, unit: posts }
+  生活内容底线: { min: 6,  window: 10, unit: posts }
+  观察型内容:   { min: 1,  window: 12, unit: posts }
+  内容线配比:
+    window: 18
+    unit: professional_posts
+    weights: <<from profile.targets[*].weight>>
+    tolerance: 0.5
+  风格配比:                        # v0.1 新增
+    window: 12
+    weights: <<from profile.styles>>
+    note: 单一风格长期占比过高会丢失多样性；过低则形不成识别度
+
+  scope: per_platform
+  note: >
+    配额服务的是观众体感，而观众只活在一个平台里。
+    「生活内容 ≥6/10」必须在每个平台各自的最近 10 条中成立。
+    status=skipped 不计入该平台窗口。
+
+# ============ 平台 ============
+platforms:
+  # SYNC: 平台约束会影响 director/workflows/4-hook 的标题长度校验
+  <平台名>:
+    title_max_chars: <n>
+    body_max_chars: <n>
+    daily_post_limit: <n>
+    accepts: [short, mid, long]
+    metrics_available: [<能拿到的指标>]
+    metrics_missing: [<拿不到的>]
+    proxy_metric: <替代指标及公式>
+    constraints: [<硬约束，如路径不能含中文、单端登录等>]
+
+  policy:
+    per_platform_opt_out: true
+    degrade: 任一平台适配失败不阻塞其他平台
+    hub: 建议统一经自建入口，只对一个接口说话
+
+# ============ 冷启动 ============
+bootstrap:
+  method: 分平台适配器
+  fallback: [csv_import, manual_entry]
+  window: 最近 90 天 或 最近 30 条
+  missing_fields: 用标题+标签推断，标记 inferred=true
+  allowed_uses:
+    - 反查素材是否已用
+    - 时间回访类系列的线索
+    - 供 director/workflows/1c-backfill 反推 profile
+  forbidden_uses:
+    - 参与配额计算        # 旧内容是旧策略产物，会把 agent 拉回老路
+  quota_epoch: 新策略生效日
+
+reconciliation:
+  trigger: weekly
+  action: 比对平台实际发布 vs ledger
+  on_gap: 补记为 record_source=manual 并告警
+
+# ============ 人工守门 ============
+human_in_the_loop:
+  mode: on_the_loop
+  never_automate:
+    - 隐私打码与授权
+    - 态度类口播的语气匹配
+    - 选题最终挑选（agent 给候选，人选一个）
+    - 「表达标准」类内容的保留判断
+    # SYNC: 上述四项与 director/workflows/9-deliver.md 的人工项保持一致
+  fully_automated:
+    - 发布数量
+    - 发布时间与间隔
+    - 类型配比与轮换
+    - 队列出队顺序
+  dry_run:
+    setting: 仅自己可见 / unlisted
+    exit_criteria: 连续 10 条无人工修正后转正式发布

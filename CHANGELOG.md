@@ -10,6 +10,12 @@
 - 5 个结构化模板：profile · topic-card · script · edit-plan · ledger
 - 3 份方法论参考：账号体系 / 爆款与起号 / 热点与语言习惯
 
+### 发布层
+- 新增 `automation/`：发布策略、配额（全比例制）、平台能力、ledger 完整结构、agent 职责
+- 与创作层通过 `ledger` 连接；`7-review` 的漏斗诊断依赖本层
+- 新增 `docs/sync-notes.md` 同步清单，两层共用字段全部标注 `# SYNC:`
+- 新增维度：`style` 进入 ledger 与配额（v0.1 新增，待实测验证）
+
 ### 存档
 - `archive/` 收录研究笔记（不打包进 skill，建议仓库保持 Private）
 

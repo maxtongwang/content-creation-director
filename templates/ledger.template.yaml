@@ -1,5 +1,8 @@
 # ledger —— 发布履历（配额判断与复盘的前提）
 # 双层：内容层 + 分发层。配额按平台分别计算。
+#
+# ⚠️ SYNC: 这是精简版，完整结构见 automation/ledger.schema.yaml。
+#          字段名不得与完整版冲突。加字段先加到 schema。
 ledger_version: "1.0"
 
 content_layer:                     # 成片本身，与平台无关

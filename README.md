@@ -99,15 +99,29 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 
 ---
 
+## 两层结构
+
+```
+director（创作层）  定位 → 选题 → 脚本 → 剪辑     判断，不能自动化
+       ↓ ledger
+automation（发布层） 分发 → 记账 → 配额 → 排期     规则，可以自动化
+       ↑ 回流到 7-review
+```
+
+**创作靠判断，发布靠规则。**两层共用字段名，改任一层前查
+[`docs/sync-notes.md`](docs/sync-notes.md)。
+
 ## 目录
 
 ```
 SKILL.md              统一入口与路由
-workflows/            12 个环节
+workflows/            12 个环节（创作层）
 references/           方法论（skill 运行时读取，已改写为通用表述）
 templates/            5 个结构化模板
+automation/           发布与记账层（配额 · ledger · agents）
 archive/              研究存档（学习笔记，不打包进 skill）
 docs/architecture.md  架构图
+docs/sync-notes.md    ⚠️ 两层字段同步清单
 scripts/build.sh      一键打包
 ```
 

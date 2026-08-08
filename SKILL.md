@@ -159,3 +159,19 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 | `references/hot-and-language.md` | 热点判断、语言习惯、平台差异 |
 
 模板在 `templates/`，产出文件时照模板结构填。
+
+---
+
+## 发布与记账层
+
+创作之外的事（分发、记账、配额、排期）在 `automation/`：
+
+| 文件 | 内容 |
+|---|---|
+| `automation/spec.automation.yaml` | 平台能力、配额、节奏、发布策略 |
+| `automation/ledger.schema.yaml` | 发布履历完整结构 |
+| `automation/agents.md` | 自动化 agent 的职责边界 |
+
+**`7-review` 的漏斗诊断依赖 ledger。**没有 ledger 只能做单条定性诊断。
+
+⚠️ 两层共用字段名。改任一层前查 `docs/sync-notes.md`。
