@@ -140,7 +140,8 @@ cd ~/.claude/skills/content-creation-director && bash scripts/update.sh
 
 **用 .skill 装的**（桌面版 / 网页 / 手机）——不用 clone，直接下载：
 
-[**最新版 .skill 下载**](https://github.com/maxtongwang/content-creation-director/releases/latest)
+[**直接下载最新版 .skill**](https://github.com/maxtongwang/content-creation-director/releases/latest/download/content-creation-director.skill)
+（这个链接永远指向最新版，不用先进 release 页面）
 
 然后 Settings → Capabilities → Skills 重新上传。**传一次，三端同步。**
 

@@ -22,7 +22,20 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
   exit 1
 fi
 
-git pull --ff-only
+# 没有 upstream 时 `git pull` 直接报错退出（filter-repo 之后、
+# 或手工 add remote 时都会这样），显式指定 remote/branch 更稳。
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+  git pull --ff-only
+else
+  remote="$(git remote | head -1)"
+  if [ -z "$remote" ]; then
+    echo "没有配置 remote，无法更新。" >&2
+    exit 1
+  fi
+  git pull --ff-only "$remote" "$branch"
+  git branch --set-upstream-to="$remote/$branch" "$branch" >/dev/null 2>&1 || true
+fi
 
 new_ver="$(cat VERSION 2>/dev/null || echo "?")"
 new_sha="$(git rev-parse --short HEAD)"
