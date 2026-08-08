@@ -1,6 +1,6 @@
 ---
 name: content-creation-director
-description: 中文自媒体编导工作流。覆盖账号定位、人设 IP、选题决策、标题钩子、脚本分镜、剪辑交付、复盘诊断、编导训练的完整链路，产出结构化文件在各环节之间传递，末端可直接驱动自动剪辑。当用户提到做自媒体、账号定位、人设、起号、选题、爆款、标题怎么写、开头怎么抓人、写脚本、分镜、怎么剪、账号数据不好、复盘、内容没方向、小红书 YouTube 运营、跨平台分发、同一条内容发不同平台怎么改，或说"帮我想想这个号该怎么做""这条选题行不行""帮我写个脚本""帮我看看我的号""扫一下我的号"时，务必使用本 skill。连了小红书或 YouTube 的 MCP 时可直接读取账号真实数据。即使用户只问一个很小的问题（比如某个标题好不好、要不要提某个身份），也应使用——这些几乎都是定位问题的表层症状。 Also triggers in English: Xiaohongshu / RedNote / YouTube account strategy, content positioning, persona and IP, topic ideas, video ideas, what should I post, titles and hooks, thumbnails, writing a script or shot list, editing and b-roll, why my views dropped, account review, cross-posting the same video to different platforms.
+description: 中文自媒体编导工作流。说「编导」「跑编导」，或提到任一环节名（0-intake / 1-account / 1b / 1c / 1d-scan / 2-ip / 3-topic / 4-hook / 5-script / 6-edit / 6b-autoedit / 7-review / 8-styles / 9-deliver / 10-training / 11-audit），或在讨论做视频、做内容、做账号时，直接进入本 skill。覆盖账号定位、人设 IP、选题、标题钩子、脚本分镜、剪辑交付、复盘诊断、编导训练，产出结构化文件在环节间传递，末端可驱动自动剪辑。用户提到起号、爆款、标题怎么写、开头怎么抓人、写脚本、怎么剪、数据不好、复盘、内容没方向、小红书 YouTube 运营、跨平台分发，或说「这条选题行不行」「帮我看看我的号」「扫一下我的号」时务必使用。即使只问一个很小的问题（某个标题好不好），也应使用——那几乎都是定位问题的表层症状。连了 MCP 时可直接读账号与素材库真实数据。 English: triggers on "编导", "director workflow", any stage name above, or any discussion of making videos/content — Xiaohongshu/RedNote/YouTube strategy, positioning, topic ideas, titles and hooks, scripts, b-roll editing, why views dropped, account review.
 ---
 
 # 编导工作流
@@ -12,23 +12,39 @@ description: 中文自媒体编导工作流。覆盖账号定位、人设 IP、�
 
 ---
 
-## 开工第一句 ★ 让用户看得见
+## 开工第一句 ★ 让用户看得见，且可验证
 
-进入本 skill 后，**第一句先说清楚走哪一环**：
+进入本 skill 后，**第一句必须是**：
 
 ```
-[编导] 走 <环节名>，产出 <文件>。
+[编导] 走 <环节名> · 已读 <实际 view 过的文件列表>
 ```
 
-一句话就够，不要展开。
+例：
 
-**为什么必须有这句**：skill 是否被触发，用户从外面看不出来。
-没有这句，一份泛泛的建议和一次真正走流程的产出长得一样。
-用户看不到这个标记，就说明 skill 没生效——那是他需要知道的事实。
+```
+[编导] 走 3-topic · 已读 workflows/3-topic.md, references/platform-playbook.md
+```
+
+### 硬规则
+
+1. **声明前必须先 view 那些文件。**工具调用是唯一凭证——
+   没有 view 记录就是没读，**不允许凭记忆写文件名**。
+2. **参与写过这个 skill 不等于读过。**长对话中最常见的失效模式是
+   「我知道里面写了什么」——那是记忆，不是执行。每次开工重新读。
+3. **跨环节跳转要重新声明。**从 `3-topic` 跳到 `4-hook`，重新报一次。
+4. **用户可随时喊「跑 X」强制指定环节**，此时同样先 view 再声明。
+
+### 为什么必须这样
+
+skill 是否被触发、流程是否被执行，用户从外面看不出来。
+没有这行标记和对应的 view 调用，一份泛泛的建议和一次真正走流程的产出长得一样。
+
+**用户看不到标记，就说明 skill 没生效——那是他需要知道的事实。**
 
 ---
 
-## 十一条核心原则
+## 十二条核心原则
 
 **一、定位是闸门，爆款是放大。**
 默认顺序：定位 → 选题（合定位 + 合热点）→ 爆款增幅。
@@ -111,6 +127,18 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 好奇、共情、身份认同在哪都成立；但小红书要的是「值得存下来」，YouTube 要的是「看得久」。
 定位跨平台，封装分平台。见 `references/platform-playbook.md`。
 
+**十二、选题四来源，用了几个要说清楚。**
+
+`3-topic` 规定四个来源：你是谁 / 观众要什么 / 平台在推什么 / 你拍得出什么。
+每次产出选题，**逐一标注这四个来源的落实状态**：
+
+```
+✅ 已用   🟡 部分   ❌ 未落实（说明原因，如 MCP 不可用）
+```
+
+只用一两个来源就出选题，结果一定偏——**这是返工的主要来源，不是判断失误**。
+用户有权知道这批选题是基于多少输入产生的。
+
 ---
 
 ## 环节地图
@@ -155,6 +183,7 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 | -------------------------- | ---------------- | ------------------- |
 | 数据不好 / 复盘 / 怎么优化 | `7-review.md`    | 诊断 + 回流指令     |
 | 想自己学会，不只要成品     | `10-training.md` | 前后对照 + 验收标准 |
+| 按流程重新审视已做的东西 / 怀疑没走流程 | `11-audit.md` | 审计报告 + 修正清单 |
 
 ### 出口（所有分支必经）
 
