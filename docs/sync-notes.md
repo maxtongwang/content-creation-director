@@ -25,6 +25,8 @@ grep -rn "SYNC:" . --include="*.md" --include="*.yaml" --include="*.json"
 | `script_id` | `templates/script.template.yaml` | `ledger.content_layer.script_ref` |
 | `purpose` 作品目的 | topic-card | `ledger.content_layer.purpose` |
 | `hooks_used` 开场句式 | `workflows/4-hook.md` 六类 | `hook_roi` 回验 |
+| `platforms` 分平台档案 | `templates/profile.template.yaml` | `per_platform` 配额、平台适配器 |
+| `platform_fit` 分平台封装 | `templates/topic-card.template.yaml` | 发布时按平台取对应标题与形态 |
 
 ---
 

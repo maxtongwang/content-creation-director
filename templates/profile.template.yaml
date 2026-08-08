@@ -117,11 +117,64 @@ styles:
       self_presence_required: true | false
       max_gap_seconds: 90
       min_ratio: 0.15
+    # ★ 固定元素 —— 这个风格里每次都要出现的东西。确认一次，永久复用。
+    # 5-script 与 6-edit 必须照此产出，不要每次重问。
+    fixed_elements:
+      开场: <固定片头 / 固定第一句 / 固定动作>
+      口头禅: [<每期都会说的话>]
+      固定环节: [<每期必有的段落，如「今日三件事」>]
+      固定道具: [<反复出现的物件>]
+      bgm: <固定曲目或曲库>
+      转场: <固定转场方式>
+      字幕样式: <字体 / 位置 / 颜色>
+      片尾: <固定结尾句 / 固定动作>
+      禁用: [<这个风格里绝对不做的，如「不加花字」>]
+
     reference: <一条自己认可的成片，作为对齐基准>   # 最重要的一行
+
+# ============ 分平台档案 ★ 多平台必填 ============
+# 定位跨平台，封装分平台。见 references/platform-playbook.md
+# SYNC: platform 名被 ledger 与 automation 的 per_platform 配额引用
+platforms:
+  <平台名>:                       # xiaohongshu | douyin | youtube
+    handle: <账号名/ID>
+    status: 未开号 | 起号中 | 稳定运营
+    priority: 主场 | 次要 | 试水
+    primary_metric: 收藏 | 完播率 | AVD      # 判成败只看这个
+    baseline:                                # 自己的历史均值，不是行业均值
+      <指标名>: <值>
+    adapt:                                   # 这个平台的封装约束
+      title_max: <n>
+      preferred_form: 图文 | 短视频 | 长视频
+      duration_range: [<下限秒>, <上限秒>]
+    source: scanned | inferred | confirmed   # 1d-scan 自动填时标注来源
+
+# ============ 长期记忆 · 已验证的结论 ============
+# 由 workflows/7-review.md 的假设回验写回。这是 skill 变准的机制。
+# 只写「被数据验证过的」，猜测不进这里。
+learned:
+  works:                          # 验证有效，以后优先用
+    - what: <做法，如「标题用身份反差句式」>
+      evidence: <哪几条内容、什么数据支持>
+      confirmed: "<YYYY-MM-DD>"
+      applies_to: [<平台>]        # 有效性经常是分平台的
+
+  fails:                          # 验证无效，以后不要再提
+    - what: <做法>
+      evidence: <连续 N 次采纳后指标无提升>
+      retired: "<YYYY-MM-DD>"
+
+  audience:                       # 观众实际认知（来自评论区）
+    称呼: [<观众怎么叫他>]
+    常问: [<反复出现的提问 —— 天然选题库>]
+    认可: [<观众实际夸什么>]
+
+  open_questions:                 # 还没验证的假设，下次复盘时检查
+    - <假设及验证方式>
 
 # ============ 制作限制 ============
 production:
-  platforms: [<平台>]
+  platforms: [<平台>]              # 与上面 platforms 的 key 一致
   aspect_ratio: <画幅>
   crop: none | per_platform
   can_show_face: true | false

@@ -14,7 +14,8 @@ flowchart TB
 
     M -- 账号与人物 --> A["1-account<br/>账号定位<br/>商业定位 · 内容支柱 · 禁区"]
     M -- 零基础 --> D["1b-discover<br/>素材挖掘<br/>只问事实，不问判断"]
-    M -- 已有账号 --> B["1c-backfill<br/>逆向导入<br/>反推 profile · 断层报告"]
+    M -- 已有账号·无工具 --> B["1c-backfill<br/>逆向导入<br/>反推 profile · 断层报告"]
+    M -- 已有账号·有MCP --> N["1d-scan<br/>自动扫号<br/>读账号 · 读评论 · 读字幕"]
     M --> P["2-ip<br/>人设 IP 与验证<br/>真实+设计 · 三道检查"]
     M --> Y["8-styles<br/>风格档案<br/>风格 = 一组剪辑参数"]
 
@@ -29,6 +30,7 @@ flowchart TB
 
     D --> A
     B --> A
+    N --> B
     A --> P
     A --> T
     P --> T

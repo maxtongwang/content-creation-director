@@ -2,18 +2,21 @@
 
 **中文自媒体编导工作流** —— 一个可安装的 Claude Skill。
 
-把「做自媒体」拆成 13 个可执行环节，每个环节产出**结构化文件**，
+把「做自媒体」拆成 14 个可执行环节，每个环节产出**结构化文件**，
 文件在环节之间传递，末端可直接驱动自动剪辑。
 
 装上之后，Claude 就能陪你从零把一个账号做起来并持续运营：
 定位 → 选题 → 脚本 → 剪辑 → 发布 → 复盘 → 回流重做。
+
+**支持小红书 / 抖音 / YouTube**，分平台判断什么算好内容。
+接上 MCP 之后还能直接读你的账号数据，不用你一条条贴。
 
 ---
 
 ## In English
 
 A Claude Skill for planning and running a Chinese social-media account
-(Xiaohongshu / Douyin). It breaks account operation into 13 stages and makes
+(Xiaohongshu / Douyin / YouTube). It breaks account operation into 14 stages and makes
 each stage emit a **structured file** that the next stage consumes as input —
 positioning, topic selection, hooks, scripts, shot lists, edit plans,
 performance review.
@@ -24,6 +27,13 @@ performance review.
 | What it produces | `profile.yaml`, `topic-card.yaml`, `script.yaml`, `edit-plan.json`, `ledger.yaml` |
 | Who it is for    | Creators starting an account, or fixing one that is not working                   |
 | Language         | Workflows, templates and output are all in Chinese                                |
+| Platforms | Xiaohongshu, Douyin, YouTube — each judged by its own standard |
+| Optional | Connect the Xiaohongshu / YouTube MCP servers and it reads your account directly |
+
+It is a **generator, not a checker** — ask for topics and you get 8, ask for a
+title and you get 10. Style, fixed elements (intro, catchphrase, recurring
+segments) and verified findings persist in `profile.yaml`, so it stops asking
+things you already told it and gets sharper the longer you use it.
 
 Install with the commands under [安装](#安装) below, then just describe your
 account to Claude in Chinese — the skill triggers on its own.
@@ -79,23 +89,121 @@ git clone https://github.com/maxtongwang/content-creation-director.git \
 
 ---
 
+## 接入 MCP（可选，但强烈建议）
+
+**不接也能用**——所有环节都有「让你贴数据」的人工路径。
+接上之后的区别是：**能自己读的，就不问你了。**
+
+| MCP | 装了之后能做什么 |
+|---|---|
+| [xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp) | 读自己主页、读笔记互动数据、读评论区、搜同赛道、发布图文/视频 |
+| [youtube-mcp-server](https://github.com/ZubeidHendricks/youtube-mcp-server) | 读频道与视频数据、**拉字幕反推语言习惯**、搜同赛道、找对标账号 |
+| 抖音 | 目前没有可用的 MCP，走人工贴数据 |
+
+### 装了之后的差别
+
+```
+没接 MCP：  「你近 20 条标题是什么？数据怎么样？评论都说什么？」  ← 你贴半天
+接了 MCP：  自动读完 → 只问三个数据里没有的问题
+```
+
+那三个问题是：靠什么赚钱、什么不想做、哪条自己最满意但数据一般。
+其余全部从数据里反推——见 [`workflows/1d-scan.md`](workflows/1d-scan.md)。
+
+### 注意
+
+| 事项 | 说明 |
+|---|---|
+| 小红书海外账号 | 在 `rednote.com`，与大陆站是两套，需配置对应域名 |
+| YouTube 配额 | 每天 10000 单位，搜索一次 100 单位；拉字幕不耗配额 |
+| 发布类工具 | 会真的发出去，走 `9-deliver` 验收之后才调用 |
+| 探测不到 | 直接转人工，不会卡住流程 |
+
+工具清单与各环节怎么用：[`references/mcp-tools.md`](references/mcp-tools.md)
+
+---
+
+## 平台支持
+
+**人性不变，评判标准变。**同一条内容在三个平台会得到完全不同的分数。
+
+| | 小红书 | 抖音 | YouTube |
+|---|---|---|---|
+| 什么算好 | 值得存下来 | 看完还转发 | 值得花时间看完 |
+| 第一指标 | 收藏 | 完播率 | 观看时长 / AVD |
+| 决定生死 | 封面 | 前 3 秒 | 缩略图 + 标题 |
+| 标题 | ≤20 字（硬） | 较宽松 | 较宽松 |
+| 长尾 | 强 | 弱 | 最强 |
+
+**定位跨平台，封装分平台。**选题内核可以复用，标题、封面、时长、成败判据必须分开。
+`3-topic` 会给出「这条发哪个平台、每个平台怎么改」，`7-review` 会分平台各判各的。
+
+完整标准见 [`references/platform-playbook.md`](references/platform-playbook.md)。
+
+---
+
 ## 怎么用
 
-**不需要背命令。**直接用中文说你要干什么，skill 会自己接管并选路径。
+**它是编导，不是审稿的。**你来要东西，它就产出东西——
+不是等你写好了拿去给它打分。
 
-| 你说                           | 进入                              |
-| ------------------------------ | --------------------------------- |
-| 「我想做个号，但不知道做什么」 | `1b-discover` 挖素材              |
-| 「我号做了半年没起色」         | `1c-backfill` 反推定位 + 断层报告 |
-| 「这条选题行不行」             | `3-topic` 选题决策                |
-| 「帮我写个脚本」               | `5-script` 脚本与分镜             |
-| 「这个标题怎么样」             | `4-hook` 标题·封面·开头           |
-| 「数据不好，帮我看看」         | `7-review` 复盘诊断               |
+**不需要背命令。**直接用中文说你要什么。
 
-**产出会落成文件。**每个环节产出一份结构化文件，下一环节把它当输入读。
-个人产出文件已在 `.gitignore` 里排除，不会误提交回仓库。
+### 要东西（主要用法）
 
-**第一次用，从定位开始。**没有 `profile.yaml`，后面所有环节都缺输入。
+| 你说 | 你会拿到 |
+|---|---|
+| 「帮我想几个选题」 | **8 个**选题，标好角度、爆款类型、建议平台 |
+| 「这条选题起个标题」 | **10 个**标题，三种句式，多平台分开给 |
+| 「开头怎么说」 | **5 句**能直接念的第一句 |
+| 「我想拍一条关于搬家的 vlog」 | 沿用你的固定片头和环节 → 8 个角度 → 标题 → 脚本 |
+| 「帮我写个脚本」 | 口播骨架 + 镜头表 + 拍摄清单 |
+| 「起个系列名」 | **5 个**，每个过完命名四关 |
+| 「我这个号叫什么好」 | **5 个**昵称 + 5 版简介 |
+
+**默认多给。**只要一个的时候明说，否则一次给一批，排好序、标明推荐哪个。
+
+### 让它看看（次要用法）
+
+| 你说 | 它会做 |
+|---|---|
+| 「这个标题怎么样」 | **先给你十个更好的**，再说你那个的问题 |
+| 「这条选题行不行」 | 把它放进一批候选里一起比，不是单独打分 |
+| 「数据不好，帮我看看」 | 分平台画漏斗 → 定位到哪一环 → 回流指令 |
+
+### 让它记住
+
+| 你说 | 它做什么 |
+|---|---|
+| 「我 vlog 有个固定片头，每期都说那句话」 | 写进 `profile.styles.<风格>.fixed_elements`，**以后每次自动带上** |
+| 「我不做测评类内容」 | 写进 `forbidden_topics`，以后不会再提 |
+| 「我一周只能拍两条」 | 写进 `production`，选题量按这个给 |
+
+**说过一次的，不会再问第二遍。**`profile.yaml` 就是它的长期记忆。
+
+### 它会越用越准
+
+`7-review` 每次复盘会把**验证过的结论**写回 `profile.learned`：
+
+```
+works   验证有效 → 以后优先用
+fails   证伪过的 → 以后不再提
+audience.常问   观众反复问的 → 天然选题库
+```
+
+下次出选题、出标题前先读这一段。**用得越久，给的东西越贴你的号。**
+
+### 起步
+
+| 情况 | 怎么开始 |
+|---|---|
+| 已有账号 + 连了 MCP | 「扫一下我的号」 |
+| 已有账号 + 没连 | 「我号做了半年没起色」，然后贴数据 |
+| 还没开号 | 「我想做个号，但不知道做什么」 |
+| 只想要一个东西 | 直接要，缺的信息它会自己推，不会拦着你 |
+
+**产出会落成文件**（`profile.yaml` / `topic-card.yaml` / `script.yaml`…），
+在环节之间传递。个人产出已在 `.gitignore` 里排除，不会误提交。
 
 ---
 
@@ -125,6 +233,7 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 | 1   | 账号定位           | `profile.yaml`                     |
 | 1b  | 素材挖掘（零基础） | 候选支柱清单                       |
 | 1c  | 逆向导入（有账号） | 反推 profile + 断层报告            |
+| 1d  | 自动扫号（有 MCP） | 读账号数据 → 反推 profile          |
 | 2   | 人设 IP 与验证     | `profile.yaml` 的 ip 段            |
 | 3   | 选题决策           | `topic-card.yaml`                  |
 | 4   | 标题·封面·开头     | `topic-card` 的 hook 段            |
@@ -137,13 +246,17 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 
 ---
 
-## 三种用户，三条入口
+## 四种用户，四条入口
 
-| 用户状态             | 入口                        | 为什么                                 |
-| -------------------- | --------------------------- | -------------------------------------- |
-| 零基础，说自己很普通 | `1b-discover` → `1-account` | 「你有什么」问不出来，得先挖事实       |
-| 有账号有数据，想提效 | `1c-backfill` → 按断层切入  | 真实定位藏在已发内容里，不在自我描述里 |
-| 有想法没成体系       | `0-intake` → `1-account`    | 常规路径                               |
+| 用户状态 | 入口 | 为什么 |
+|---|---|---|
+| 还没开号，说自己很普通 | `1b-discover` → `1-account` | 「你有什么」问不出来，得先挖事实 |
+| 有账号，且连了 MCP | `1d-scan` → 按断层切入 | 能自己读的就不问你 |
+| 有账号，没连 MCP | `1c-backfill` → 按断层切入 | 同样的逻辑，改成你贴数据 |
+| 有想法没成体系 | `0-intake` → `1-account` | 常规路径 |
+
+**四条不是隔离的。**你可能小红书有号、YouTube 还没开——
+那就小红书扫号，YouTube 从定位补起。流程不会因为你不属于任何一类就卡住。
 
 ---
 
@@ -157,7 +270,7 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 
 ---
 
-## 六条核心原则
+## 十条核心原则
 
 1. **定位是闸门，爆款是放大。** 爆款元素只能在定位允许的范围内放大。
 2. **一条数据流贯穿始终。** 上一环节的输出是下一环节的输入。
@@ -165,6 +278,10 @@ profile.yaml  →  topic-card  →  script  →  edit-plan  →  ledger  →  di
 4. **风格是一组剪辑参数，不是标签。** 剪之前先识别，识别不出就问。
 5. **逼出否定比收集信息更重要。** 没有 `forbidden_topics` 的 profile 是废的。
 6. **能循环的地方一定要循环。** 验收不过、复盘有问题、能力有短板，都回对应环节重做。
+7. **有什么用什么，缺什么补什么。** 不要求你先填齐再开工——能推的先推，只问缺了就做不下去的。
+8. **默认生成，不默认评判。** 你来要东西，就给一批，不是给你的东西打分。
+9. **记住的东西不再问第二遍。** 风格、固定元素、忌讳一次写进 profile，长期复用。
+10. **人性不变，平台标准变。** 定位跨平台，封装分平台。
 
 ---
 
@@ -193,8 +310,8 @@ automation（发布层）  分发 → 记账 → 配额 → 排期     规则，
 
 ```
 SKILL.md              统一入口与路由
-workflows/            13 个环节（创作层）
-references/           方法论（skill 运行时读取，已改写为通用表述）
+workflows/            14 个环节（创作层）
+references/           方法论 + 平台手册 + MCP 工具清单（运行时读取）
 templates/            5 个结构化模板
 automation/           发布与记账层（配额 · ledger · agents）
 archive/              研究存档（学习笔记，不打包进 skill）
