@@ -86,8 +86,6 @@ bash scripts/build.sh          # 生成 dist/content-creation-director.skill
 
 上传后 skill 存在你的账号上，**网页、手机、桌面版都会自动同步**，只需传一次。
 
-> 打包版**不含 `archive/`**，比直接克隆更干净。
-
 ---
 
 ### ChatGPT
@@ -448,7 +446,6 @@ workflows/            15 个环节（创作层）
 references/           方法论 + 平台手册 + MCP 工具清单（运行时读取）
 templates/            5 个结构化模板
 automation/           发布与记账层（配额 · ledger · agents）
-archive/              研究存档（学习笔记，不打包进 skill）
 docs/architecture.md  架构图
 docs/sync-notes.md    两层字段同步清单
 scripts/build.sh      一键打包
@@ -456,17 +453,6 @@ scripts/build.sh      一键打包
 
 ---
 
-## 关于 archive/
-
-`archive/` 保留了原作者署名，**建议仓库保持 Private**。
-该目录不会打包进 `.skill`，`build.sh` 会跳过它。详见
-[`archive/README.md`](archive/README.md)。
-
-要公开仓库的话，需要先清理该目录及其历史，或取得原作者许可。
-`references/` 已改写成通用表述、去掉姓名，那部分公开是安全的。
-
----
-
 ## 许可
 
-MIT（不含 `archive/` —— 该目录为第三方内容的学习笔记，权益归原作者）
+MIT

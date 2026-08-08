@@ -15,7 +15,7 @@ cp -r "${ROOT}/automation" "${OUT}/${NAME}/"
 mkdir -p "${OUT}/${NAME}/docs"
 cp "${ROOT}/docs/sync-notes.md" "${OUT}/${NAME}/docs/"
 cp "${ROOT}/README.md" "${OUT}/${NAME}/" 2>/dev/null || true
-# archive/ 与 docs/architecture.md 不打包 —— 研究笔记与仓库文档，不是运行时依赖
+# docs/architecture.md 不打包 —— 仓库文档，不是运行时依赖
 
 cd "${OUT}"
 zip -qr "${NAME}.skill" "${NAME}"
