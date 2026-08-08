@@ -8,7 +8,7 @@
 装上之后，Claude 就能陪你从零把一个账号做起来并持续运营：
 定位 → 选题 → 脚本 → 剪辑 → 发布 → 复盘 → 回流重做。
 
-**支持小红书 / 抖音 / YouTube**，分平台判断什么算好内容。
+**支持小红书 / YouTube**，分平台判断什么算好内容。
 接上 MCP 之后还能直接读你的账号数据，不用你一条条贴。
 
 ---
@@ -16,7 +16,7 @@
 ## In English
 
 A Claude Skill for planning and running a Chinese social-media account
-(Xiaohongshu / Douyin / YouTube). It breaks account operation into 15 stages and makes
+(Xiaohongshu / YouTube). It breaks account operation into 15 stages and makes
 each stage emit a **structured file** that the next stage consumes as input —
 positioning, topic selection, hooks, scripts, shot lists, edit plans,
 performance review.
@@ -27,7 +27,7 @@ performance review.
 | What it produces | `profile.yaml`, `topic-card.yaml`, `script.yaml`, `edit-plan.json`, `ledger.yaml` |
 | Who it is for    | Creators starting an account, or fixing one that is not working                   |
 | Language         | Workflows, templates and output are all in Chinese                                |
-| Platforms | Xiaohongshu, Douyin, YouTube — each judged by its own standard |
+| Platforms | Xiaohongshu and YouTube — each judged by its own standard |
 | Optional | Connect the Xiaohongshu / YouTube MCP servers and it reads your account directly |
 
 It is a **generator, not a checker** — ask for topics and you get 8, ask for a
@@ -154,7 +154,6 @@ MCP 工具是**单独的东西，不随 skill 安装**——skill 是文档，MC
 | [VideoSemantics](https://github.com/maxtongwang/VideoSemantics) | 按旁白语义找 b-roll、搜素材库、拉转写 |
 | DaVinci Resolve MCP | 建时间线、铺配音、自动生成字幕、渲染 |
 | TTS / 声音克隆（如 Artlist） | **克隆你自己的声音**做配音，或用通用合成音 |
-| 抖音 | 目前没有可用的 MCP，走人工贴数据 |
 
 ### 装了之后的差别
 
@@ -225,15 +224,15 @@ script.yaml  →  配音  →  按段找 b-roll  →  edit-plan.json  →  DaVin
 
 ## 平台支持
 
-**人性不变，评判标准变。**同一条内容在三个平台会得到完全不同的分数。
+**人性不变，评判标准变。**同一条内容在两个平台会得到完全不同的分数。
 
-| | 小红书 | 抖音 | YouTube |
-|---|---|---|---|
-| 什么算好 | 值得存下来 | 看完还转发 | 值得花时间看完 |
-| 第一指标 | 收藏 | 完播率 | 观看时长 / AVD |
-| 决定生死 | 封面 | 前 3 秒 | 缩略图 + 标题 |
-| 标题 | ≤20 字（硬） | 较宽松 | 较宽松 |
-| 长尾 | 强 | 弱 | 最强 |
+|  | 小红书 | YouTube |
+| --- | --- | --- |
+| 什么算好 | 值得存下来 | 值得花时间看完 |
+| 第一指标 | 收藏 | 观看时长 / AVD |
+| 决定生死 | 封面 | 缩略图 + 标题 |
+| 标题 | ≤20 字（硬） | 较宽松 |
+| 长尾 | 强 | 最强 |
 
 **定位跨平台，封装分平台。**选题内核可以复用，标题、封面、时长、成败判据必须分开。
 `3-topic` 会给出「这条发哪个平台、每个平台怎么改」，`7-review` 会分平台各判各的。
@@ -287,7 +286,7 @@ script.yaml  →  配音  →  按段找 b-roll  →  edit-plan.json  →  DaVin
 
 **关于「最近热门」，先说清楚**：没有热榜接口。
 YouTube 能查「近 N 天发布、按播放排序」，这是真实的近期表现；
-小红书只能看某个词当下的排名；抖音没有接口。
+小红书只能看某个词当下的排名。
 小红书首页推荐是**推给你的**，不是全网热的——拿它当趋势会把你自己的兴趣误当成大盘。
 
 ### 剪辑到粗剪就停

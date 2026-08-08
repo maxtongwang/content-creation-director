@@ -137,7 +137,7 @@ styles:
 # 定位跨平台，封装分平台。见 references/platform-playbook.md
 # SYNC: platform 名被 ledger 与 automation 的 per_platform 配额引用
 platforms:
-  <平台名>:                       # xiaohongshu | douyin | youtube
+  <平台名>:                       # xiaohongshu | youtube
     handle: <账号名/ID>
     status: 未开号 | 起号中 | 稳定运营
     priority: 主场 | 次要 | 试水
