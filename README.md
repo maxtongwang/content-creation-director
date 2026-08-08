@@ -35,34 +35,46 @@ title and you get 10. Style, fixed elements (intro, catchphrase, recurring
 segments) and verified findings persist in `profile.yaml`, so it stops asking
 things you already told it and gets sharper the longer you use it.
 
-Install with the commands under [安装](#安装) below, then just describe your
-account to Claude in Chinese — the skill triggers on its own.
+Native install for **Claude Code** and **Claude desktop/web/mobile**; usable as a
+knowledge base in **ChatGPT** and via `AGENTS.md` in **Codex CLI**. See
+[安装](#安装), then just describe your account to Claude in Chinese — the skill
+triggers on its own.
 
 ---
 
 ## 安装
 
-三选一。**方式一**最省事，改了代码立刻生效。
+按你用的工具选一条。前两条是原生支持，后两条是「拿它当参考资料用」。
 
-### 方式一 · Claude Code（推荐）
+| 工具 | 支持程度 | 装法 |
+|---|---|---|
+| Claude Code | 原生 | 克隆进 skills 目录 |
+| Claude 桌面版 / 网页 / 手机 | 原生 | 上传打包好的 `.skill` |
+| ChatGPT | 非原生 | 建 Project，把文件当知识库 |
+| Codex CLI | 非原生 | 克隆后在 `AGENTS.md` 里指过去 |
+
+---
+
+### Claude Code
 
 ```bash
 git clone https://github.com/maxtongwang/content-creation-director.git \
   ~/.claude/skills/content-creation-director
 ```
 
-装完就能用，重开一个会话即可。想跟着仓库更新：
+重开一个会话即可用。跟随更新：
 
 ```bash
 cd ~/.claude/skills/content-creation-director && git pull
 ```
 
-> 这种装法会把整个仓库放进 skills 目录，包含 `archive/`（`.skill` 打包时是排除掉的）。
-> `SKILL.md` 不会引用它，不影响运行；介意的话用方式二。
+项目级安装把路径换成 `<你的项目>/.claude/skills/content-creation-director`。
 
-### 方式二 · 打包成 .skill 上传
+---
 
-适合在 Claude 网页版 / 桌面版里用。
+### Claude 桌面版 / 网页 / 手机
+
+先打包，再上传：
 
 ```bash
 git clone https://github.com/maxtongwang/content-creation-director.git
@@ -70,22 +82,65 @@ cd content-creation-director
 bash scripts/build.sh          # 生成 dist/content-creation-director.skill
 ```
 
-在 Claude 的 **Settings → Skills** 里上传生成的 `.skill` 文件。
+**Settings → Capabilities → Skills → 上传该文件**，然后重启客户端。
 
-### 方式三 · 只给某个项目用
+上传后 skill 存在你的账号上，**网页、手机、桌面版都会自动同步**，只需传一次。
+
+> 打包版**不含 `archive/`**，比直接克隆更干净。
+
+---
+
+### ChatGPT
+
+ChatGPT 没有 skill 机制，但这套东西本质是「一份路由 + 一批工作流文档」，
+当知识库用一样成立。
+
+1. 新建一个 **Project**
+2. 把 `SKILL.md`、`workflows/`、`references/`、`templates/` 里的文件上传为项目文件
+3. 把 `SKILL.md` 的正文粘进 **Project instructions**（那是路由表，决定什么时候读哪个文件）
+
+**差别要知道**：ChatGPT 不会像 Claude 那样按需只读一个环节文件，
+它一次看到全部上下文——所以路由的「不要一次读全部」在这里失效，
+效果会比原生 skill 差一些，但流程和判断标准照样能用。
+
+---
+
+### Codex CLI
+
+Codex 读 `AGENTS.md`。克隆到项目里，然后在 `AGENTS.md` 指过去：
 
 ```bash
 git clone https://github.com/maxtongwang/content-creation-director.git \
-  <你的项目>/.claude/skills/content-creation-director
+  .agents/content-creation-director
 ```
+
+```markdown
+<!-- AGENTS.md -->
+## 内容创作
+
+做自媒体相关的事（定位、选题、脚本、剪辑、复盘）时，
+先读 `.agents/content-creation-director/SKILL.md`，按其中的环节地图选文件。
+不要一次读全部。
+```
+
+也可以直接把 `SKILL.md` 的内容并进 `AGENTS.md`，省一次跳转，代价是每次都占上下文。
+
+---
 
 ### 装好了怎么确认
 
-| 检查         | 预期                                                              |
-| ------------ | ----------------------------------------------------------------- |
-| 目录结构     | `<装的位置>/SKILL.md` 存在                                        |
-| 会话里问一句 | 「我想做个小红书号，帮我看看怎么定位」                            |
-| 正常表现     | Claude 开始走 `0-intake` 或 `1-account`，问你事实而不是给泛泛建议 |
+| 检查 | 预期 |
+|---|---|
+| 文件在位 | `<装的位置>/SKILL.md` 存在 |
+| 会话里问一句 | 「我想做个小红书号，帮我看看怎么定位」 |
+| 正常表现 | 开始走 `0-intake` 或 `1-account`，问你事实而不是给泛泛建议 |
+
+---
+
+### 关于 MCP
+
+MCP 工具是**单独的东西，不随 skill 安装**——skill 是文档，MCP 是跑在你机器上的服务。
+没有 MCP 也能用（全部退化成人工贴数据），接上则能直接读账号与素材库。见下一节。
 
 ---
 
