@@ -9,7 +9,32 @@
 定位 → 选题 → 脚本 → 剪辑 → 发布 → 复盘 → 回流重做。
 
 **支持小红书 / YouTube**，分平台判断什么算好内容。
-接上 MCP 之后还能直接读你的账号数据，不用你一条条贴。
+⚠️ **但两个平台能力不对等** —— 见下表，装之前先知道差在哪。
+
+
+## ⚠️ 两个平台，能力不对等 —— 装之前先知道
+
+**同一套流程，两个平台上能做到的深度差别很大。**下表是一次真实项目里实测出来的：
+
+| | 小红书 | YouTube |
+| --- | --- | --- |
+| **读自己账号数据** | 🔴 **API 拿不到** —— 只能手动截图创作者后台，人工录入 | ✅ Data API 全量：播放 / 时长 / 评论 / 订阅 |
+| **对标调研** | 🟡 MCP 可用但**慢且常超时**（一次调用 40–110 秒，实测挂过 3 次） | ✅✅ API 稳定，**一轮能拉几千条带完整指标** |
+| **评论密度** | ✅✅ 每篇 20+ 且常有 `hasMore` | 🟡 **中位 12 条，13% 零评论**（中文地产类实测 n=30） |
+| **评论字段** | ✅ 赞 / 回复数 / IP 属地 / 时间 | ✅ **完全对等**（likeCount / totalReplyCount / publishedAt） |
+| **发布** | ✅ MCP 能发（图文 + 视频） | ❌ |
+
+### 结论：按能力选，不要按「哪个平台更适合」选
+
+```
+要量化调研、要对标全量、要复盘        →  YouTube 强得多
+要挖观众在问什么、要发布自动化         →  小红书
+自己账号的历史数据                   →  YouTube 白拿；小红书必须人工补一次
+```
+
+⚠️ **最容易被忽略的一条**：一个真实项目里，小红书侧 114 条自有数据
+**全部是用户手动截图后台、人工录入的** —— 没有那一步，小红书连自己的账号数据都没有。
+**排期时把这一步算进去。**
 
 ---
 
@@ -27,7 +52,7 @@ performance review.
 | What it produces | `profile.yaml`, `topic-card.yaml`, `script.yaml`, `edit-plan.json`, `ledger.yaml` |
 | Who it is for    | Creators starting an account, or fixing one that is not working                   |
 | Language         | Workflows, templates and output are all in Chinese                                |
-| Platforms | Xiaohongshu and YouTube — each judged by its own standard |
+| Platforms | Xiaohongshu and YouTube — each judged by its own standard.<br>⚠️ **Not equal in tooling**: YouTube has a full public Data API (bulk research, own-channel history);<br>Xiaohongshu needs an MCP bridge (slow, times out) and **own-channel stats must be entered by hand**. |
 | Optional | Connect the Xiaohongshu / YouTube MCP servers and it reads your account directly |
 
 It is a **generator, not a checker** — ask for topics and you get 8, ask for a
